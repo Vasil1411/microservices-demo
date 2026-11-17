@@ -1,0 +1,35 @@
+services:
+  frontend:
+    build: ./src/frontend
+    ports:
+      - "8080:8080"
+    environment:
+      - PORT=8080
+      - PRODUCT_CATALOG_SERVICE_ADDR=productcatalogservice:3550
+      # Вече насочваме валутния сървис към неговия реален контейнер:
+      - CURRENCY_SERVICE_ADDR=currencyservice:7000
+      - CART_SERVICE_ADDR=cartservice:7070
+      - SHIPPING_SERVICE_ADDR=shippingservice:50051
+      - CHECKOUT_SERVICE_ADDR=checkoutservice:5050
+      - RECOMMENDATION_SERVICE_ADDR=recommendationservice:8080
+      - AD_SERVICE_ADDR=adservice:9555
+      - SHOPPING_ASSISTANT_SERVICE_ADDR=shoppingassistantservice:8080
+    depends_on:
+      - productcatalogservice
+      - currencyservice
+
+  productcatalogservice:
+    build: ./src/productcatalogservice
+    ports:
+      - "3550:3550"
+    environment:
+      - PORT=3550
+
+  # Добавяме услугата за валути тук:
+  currencyservice:
+    build: ./src/currencyservice
+    ports:
+      - "7000:7000"
+    environment:
+      - PORT=7000
+      - DISABLE_PROFILER=1
