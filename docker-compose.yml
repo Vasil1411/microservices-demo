@@ -6,7 +6,6 @@ services:
     environment:
       - PORT=8080
       - PRODUCT_CATALOG_SERVICE_ADDR=productcatalogservice:3550
-      # Вече насочваме валутния сървис към неговия реален контейнер:
       - CURRENCY_SERVICE_ADDR=currencyservice:7000
       - CART_SERVICE_ADDR=cartservice:7070
       - SHIPPING_SERVICE_ADDR=shippingservice:50051
@@ -17,6 +16,7 @@ services:
     depends_on:
       - productcatalogservice
       - currencyservice
+      - cartservice
 
   productcatalogservice:
     build: ./src/productcatalogservice
@@ -25,7 +25,6 @@ services:
     environment:
       - PORT=3550
 
-  # Добавяме услугата за валути тук:
   currencyservice:
     build: ./src/currencyservice
     ports:
@@ -33,3 +32,18 @@ services:
     environment:
       - PORT=7000
       - DISABLE_PROFILER=1
+
+  # Добавяме услугата за количка:
+  cartservice:
+    build: ./src/cartservice
+    ports:
+      - "7070:7070"
+    environment:
+      - PORT=7070
+      - REDIS_ADDR=redis-cart:6379
+    depends_on:
+      - redis-cart
+
+  # Добавяме Redis базата данни, която се изисква от количката:
+  redis-cart:
+    image: redis:alpine
