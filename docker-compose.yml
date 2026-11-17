@@ -40,6 +40,7 @@ services:
       - "7070:7070"
     environment:
       - PORT=7070
+      - ASPNETCORE_URLS=http://0.0.0.0:7070
       - REDIS_ADDR=redis-cart:6379
     depends_on:
       - redis-cart
@@ -47,3 +48,11 @@ services:
   # Добавяме Redis базата данни, която се изисква от количката:
   redis-cart:
     image: redis:alpine
+
+
+  adservice:
+    build: ./src/adservice
+    ports:
+      - "9555:9555"
+    environment:
+      - PORT=9555
