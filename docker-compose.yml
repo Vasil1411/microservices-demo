@@ -73,3 +73,11 @@ services:
       - productcatalogservice
       - currencyservice
       - cartservice
+
+    
+  emailservice:
+    build: ./src/emailservice
+    ports:
+      - "8080:8080"
+    environment:
+      - PORT=8080
